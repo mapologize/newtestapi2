@@ -18,4 +18,5 @@ app.get('/hello', (req,res) => {
   res.send("เฮลโล่");
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+module.exports = app;
+module.exports.handler = serverless(app);
