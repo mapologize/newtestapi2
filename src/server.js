@@ -1,22 +1,25 @@
-const express = require('express');
-const Web3 = require('web3')
+const express = require("express");
+const serverless = require("serverless-http");
+const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.HttpProvider(""));
-
 const app = express();
+const router = express.Router();
 
-const port = process.env.PORT || 5000;
+router.get("/", (req, res) => {
+  res.json({
+    hello: "hi hi!"
+  });
+});
 
-app.get('/getsignature/:pkey/:hash', (req, res) => {
+router.get('/getsignature/:pkey/:hash', (req, res) => {
+
     const privateKey = req.params.pkey;
     const hashmes = req.params.hash;
-    const sigObj = web3.eth.accounts.sign(hashmes, privateKey)
-    const signature = sigObj.signature;
-  res.send(signature);
+    const sigObj = web3.eth.accounts.sign(hashmes, privateKey);
+    res.send(sigObj.signature);
 });
 
-app.get('/hello', (req,res) => {
-  res.send("เฮลโล่");
-});
+app.use(`/.netlify/functions/api`, router);
 
 module.exports = app;
 module.exports.handler = serverless(app);
